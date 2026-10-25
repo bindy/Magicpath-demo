@@ -1,0 +1,10 @@
+body { margin: 0; font-family: system-ui, sans-serif; }
+#root { height: 100vh; display: flex; flex-direction: column; }
+.canvas-wrap { flex: 1; position: relative; background: #f3f4f6; }
+.topbar { display: flex; gap: 12px; align-items: center; padding: 8px 12px; border-bottom: 1px solid #ddd; }
+.topbar button, .zoombar button { cursor: pointer; }
+.zoombar { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 6px; align-items: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 6px; z-index: 10; }
+.node-card { background: #fff; border: 1px solid #ccc; border-radius: 8px; padding: 10px; box-sizing: border-box; width: 100%; height: 100%; overflow: hidden; }
+.node-card h4 { margin: 0 0 6px; font-size: 14px; }
+.node-card p { margin: 0; font-size: 12px; color: #555; white-space: pre-wrap; }
+.shape-box { width: 100%; height: 100%; box-sizing: border-box; }
