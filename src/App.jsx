@@ -47,7 +47,7 @@ function CanvasInner() {
     <div>
       <div className="topbar">
         <strong>{sampleBoard.title}</strong>
-        <span>R0：React Flow 适配 + 缩放 + 显示全部元素冒烟</span>
+        <span className="topbar-sub">R0：React Flow 适配 + 缩放 + 显示全部元素冒烟</span>
         <button onClick={toggleFullscreen}>全屏查看</button>
       </div>
       <div className="canvas-wrap" ref={wrapRef}>
