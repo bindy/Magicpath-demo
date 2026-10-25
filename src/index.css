@@ -37,3 +37,42 @@ body { margin: 0; font-family: system-ui, sans-serif; }
   .node-card h4 { font-size: 13px; }
   .node-card p { font-size: 12px; }
 }
+
+/* R1：布局与工具条（只改样式层，引擎与适配层不动） */
+.app-layout { height: 100%; display: flex; flex-direction: column; }
+.main-row { flex: 1; display: flex; min-height: 0; }
+.editor-panel { width: 300px; flex-shrink: 0; border-left: 1px solid #ddd; padding: 12px; overflow: auto; box-sizing: border-box; background: #fff; }
+.editor-panel label { display: block; margin: 10px 0; font-size: 13px; }
+.editor-panel input, .editor-panel textarea, .editor-panel select { width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px; font-size: 14px; }
+.editor-panel input[type="color"] { padding: 2px; height: 44px; }
+.editor-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.editor-actions button, .board-toolbar button, .main-toolbar button, .context-menu button, .image-toolbar button { min-height: 44px; padding: 10px 12px; font-size: 14px; cursor: pointer; }
+.board-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px 12px; border-bottom: 1px solid #eee; box-sizing: border-box; }
+.shape-picker { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.main-toolbar { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 6px; z-index: 10; max-width: calc(100vw - 24px); box-sizing: border-box; bottom: max(12px, env(safe-area-inset-bottom)); }
+.main-toolbar button.active { background: #2563eb; color: #fff; }
+.group-box { position: absolute; border: 2px dashed #2563eb; border-radius: 8px; pointer-events: none; z-index: 5; box-sizing: border-box; }
+.group-box span { position: absolute; top: -22px; left: 0; background: #2563eb; color: #fff; font-size: 12px; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+.image-toolbar { position: absolute; display: flex; gap: 6px; flex-wrap: wrap; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 6px; z-index: 20; max-width: calc(100vw - 24px); box-sizing: border-box; }
+.context-menu { position: fixed; display: flex; flex-direction: column; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 6px; z-index: 50; box-shadow: 0 4px 16px rgba(0,0,0,0.15); min-width: 180px; }
+.context-menu button { text-align: left; }
+.toast { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); background: #111; color: #fff; padding: 10px 12px; border-radius: 8px; z-index: 30; max-width: calc(100vw - 48px); box-sizing: border-box; font-size: 13px; }
+.toast button { margin-left: 10px; background: transparent; color: #fff; border: none; font-size: 16px; cursor: pointer; min-height: auto; padding: 0; }
+.closed-screen { padding: 24px; }
+@media (max-width: 640px) {
+  .main-row { flex-direction: column; }
+  .editor-panel { width: auto; max-height: 45vh; border-left: none; border-top: 1px solid #ddd; }
+  .main-toolbar { left: 12px; right: 12px; transform: none; left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); }
+  .zoombar { bottom: auto; top: 12px; }
+}
+
+/* R2：图片编辑器面板（只改样式层） */
+.image-preview { position: relative; height: 160px; background: linear-gradient(135deg,#c084fc,#f472b6); border: 1px solid #ccc; border-radius: 8px; overflow: hidden; cursor: crosshair; margin: 8px 0; }
+.mini-row { display: flex; gap: 6px; align-items: center; margin: 6px 0; }
+.mini-row label { display: flex; align-items: center; gap: 4px; font-size: 12px; flex: 1; }
+.mini-row input { width: 100%; box-sizing: border-box; }
+.mini-row input[type="checkbox"] { width: auto; min-height: 44px; }
+.mini-row button { min-height: 44px; }
+
+/* R3：页签激活态 */
+.editor-actions button.active { background: #2563eb; color: #fff; }
