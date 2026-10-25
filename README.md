@@ -9,6 +9,7 @@ R0 范围（DESIGN.md 第 0.4 节）：React + Vite + React Flow 新原型，与
 - 显示全部元素：按节点外接矩形算视口，再按 0.02~4 clamp，见 `fitViewTarget`。
 - 节点注册：brief / image / text / video / shape 五种自定义节点（R0 只是占位渲染，未接生成、编辑器、分组、存储）。
 - 顶部条：画布名 + 全屏查看。
+- 移动端适配：高度用 100dvh、顶部和底部留安全区（viewport-fit=cover），小屏下顶部条换行并隐藏副标题、缩放条贴底居中换行、按钮最小触摸高度 44px。引擎的触摸平移和双指缩放仍走 React Flow 默认行为，本次只改样式层，没有改适配层和节点逻辑。
 
 ## 未做（R1 及以后）
 
