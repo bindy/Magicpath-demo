@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Background,
   ReactFlow,
@@ -73,9 +73,19 @@ function CanvasInner() {
   const fileRef = useRef(null)
   const { getViewport, setViewport } = useReactFlow()
 
-  const flow = boardToFlow(board)
-  const flowNodes = flow.nodes.map((n) => ({ ...n, selected: selectedIds.has(n.id) }))
-  const flowEdges = flow.edges.map((e) => ({ ...e, selected: selectedEdgeIds.has(e.id) }))
+  // 注意：flowNodes/flowEdges 必须 memo，否则每次渲染都产生新对象，
+  // React Flow 会把“节点变了”当成外部同步，每次都 setNodes；
+  // 再叠加下面的视口回写和 fitView，就会形成“视口变化 → Board 更新 →
+  // 节点新对象 → 再同步 → 再算视口”的无限循环（React #185，页面全白）。
+  const flow = useMemo(() => boardToFlow(board), [board])
+  const flowNodes = useMemo(
+    () => flow.nodes.map((n) => ({ ...n, selected: selectedIds.has(n.id) })),
+    [flow, selectedIds],
+  )
+  const flowEdges = useMemo(
+    () => flow.edges.map((e) => ({ ...e, selected: selectedEdgeIds.has(e.id) })),
+    [flow, selectedEdgeIds],
+  )
 
   const commit = useCallback((next) => {
     setPast((p) => pushHistory(p, board))
@@ -383,8 +393,16 @@ function CanvasInner() {
             }}
             onPaneClick={() => { setContextMenu(null) }}
             onViewportChange={(vp) => {
-              setViewportState(vp)
-              setBoard((prev) => ({ ...prev, viewport: { x: vp.x, y: vp.y, k: vp.zoom } }))
+              // 视口值没变时不产生新对象、不写 Board，否则每次视口事件
+              // 都会让父组件重渲染，进而触发新一轮同步（无限循环的另一环）。
+              setViewportState((prev) => (
+                prev.x === vp.x && prev.y === vp.y && prev.zoom === vp.zoom ? prev : vp
+              ))
+              setBoard((prev) => {
+                const old = prev.viewport || {}
+                if (old.x === vp.x && old.y === vp.y && old.k === vp.zoom) return prev
+                return { ...prev, viewport: { x: vp.x, y: vp.y, k: vp.zoom } }
+              })
             }}
             nodeTypes={nodeTypes}
             minZoom={MIN_ZOOM}
@@ -392,7 +410,9 @@ function CanvasInner() {
             defaultViewport={initialFlow.viewport}
             selectionOnDrag={tool === 'select'}
             panOnDrag={tool !== 'select'}
-            fitView
+            // fitView 只在挂载时跑一次：裸传 fitView 属性会在节点变化时反复
+            // 重算视口，配合视口回写就是无限循环，改用 onInit 一次性适配。
+            onInit={(instance) => { instance.fitView() }}
           >
             <Background />
           </ReactFlow>
